@@ -1,0 +1,91 @@
+.calendar-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    align-items: start;
+}
+
+.calendar-section {
+    min-height: 500px;
+}
+
+
+.combo-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+    font-weight: 500;
+}
+
+.calendar-day:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+.chart-container {
+    height: 340px;
+    margin-top: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 5px;
+}
+
+/* Range Selector */
+.range-selector {
+    margin: 8px 0 16px 0;
+}
+
+.range-selector__row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0 16px 0;
+    margin-bottom: 8px;
+}
+
+.range-selector__label {
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.range-selector__controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.range-selector__input {
+    padding: 6px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+.range-selector__input[type="number"] {
+    width: 90px;
+}
+
+.range-selector__input[type="date"] {
+    width: 140px;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepPlanner</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://p7.hiclipart.com/preview/435/665/185/computer-icons-backpacking-hiking-hiking.jpg"
+        type="image/jpeg">
+</head>
+
+<body>
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <h1>StepPlanner</h1>
+            <button id="googleLoginBtn" class="google-login-btn">
+                Anmeldung nur für KLubina </button>
+            <button id="demoLoginBtn" class="secondary-btn">Demo für Externe</button>
+        </div>
+    </div>
+
+    <div id="appContainer" style="display: none;">
+        <div class="dashboard">
+
+
+            <div class="navigation">
+                <div class="nav-row">
+                    <button class="nav-button active" data-tab="steps" onclick="App.switchTab('steps')">
+                        Historie
+                    </button>
+                    <button class="nav-button" data-tab="stepPlanning" onclick="App.switchTab('stepPlanning')">
+                        Ziele
+                    </button>
+                </div>
+                <div class="nav-actions">
+                    <button class="nav-button" onclick="App.exportAllData()">
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-panel">
+                <div id="stepsContainer"></div>
+                <div id="stepPlanningContainer" style="display: none;"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

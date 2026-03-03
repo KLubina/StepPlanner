@@ -19,6 +19,11 @@ export function reset() {
   plannedDays = {};
 }
 
+/** Inject pre-built planned days for demo / mock mode. */
+export function injectMockPlannedDays(data) {
+  plannedDays = data;
+}
+
 export async function loadPlannedDays() {
   try {
     const plannedRef = collection(db, "stepGoals");

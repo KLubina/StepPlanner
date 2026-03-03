@@ -26,6 +26,11 @@ export function reset() {
   editingTemplateId = null;
 }
 
+/** Inject pre-built templates for demo / mock mode. */
+export function injectMockTemplates(data) {
+  templates = data;
+}
+
 export async function loadTemplates() {
   try {
     const templatesRef = collection(db, "stepTemplates");

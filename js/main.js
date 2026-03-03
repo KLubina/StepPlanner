@@ -61,7 +61,11 @@ class App {
       if (appContainer) appContainer.style.display = "block";
       if (userEmail) userEmail.textContent = demoUser.displayName;
 
-      await this.loadUserData();
+      // Load static mock data – skips all Firebase calls
+      const { setupMockData } = await import("../mock-data/MockLoader.js");
+      await setupMockData();
+      this.isDataInitialized = true;
+      this.switchTab(this.currentTab || "steps");
     });
 
     logoutBtn?.addEventListener("click", async () => {

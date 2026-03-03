@@ -20,6 +20,11 @@ export function reset() {
   stepsData = [];
 }
 
+/** Inject pre-built records for demo / mock mode. */
+export function injectMockData(data) {
+  stepsData = data;
+}
+
 export async function loadSteps() {
   try {
     const cutoffDate = new Date();

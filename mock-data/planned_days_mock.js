@@ -13,124 +13,58 @@
  * Some days deliberately break the pattern (rest days, sick days, holidays).
  * The MockLoader converts these into plannedDays keyed by "YYYY-MM-DD".
  */
-export const templateIdPerDay = [
-  // === March 2026 – starts Tue 3 ===========================================
-  //  3 Tue          4 Wed            5 Thu            6 Fri
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  //  7 Sat           8 Sun            9 Mon           10 Tue
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  // 11 Wed          12 Thu           13 Fri           14 Sat
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  // 15 Sun          16 Mon           17 Tue           18 Wed
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  // 19 Thu          20 Fri           21 Sat           22 Sun (lazy)
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  "tmpl_ruhe",
-  // 23 Mon          24 Tue           25 Wed (sick)    26 Thu (still low)
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_leicht",
-  "tmpl_leicht",
-  // 27 Fri          28 Sat           29 Sun           30 Mon
-  "tmpl_normal",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  // 31 Tue
-  "tmpl_normal",
+// Dynamic generator for templateIdPerDay so demo always aligns to today
+function formatDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
-  // === April 2026 ===========================================================
-  //  1 Wed           2 Thu            3 Fri            4 Sat
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  //  5 Sun           6 Mon            7 Tue            8 Wed
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  //  9 Thu          10 Fri           11 Sat           12 Sun
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  // 13 Mon          14 Tue           15 Wed           16 Thu
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  // 17 Fri          18 Sat           19 Sun           20 Mon
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  // 21 Tue          22 Wed           23 Thu           24 Fri
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  // 25 Sat          26 Sun (rest)    27 Mon           28 Tue
-  "tmpl_intensiv",
-  "tmpl_ruhe",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  // 29 Wed          30 Thu
-  "tmpl_aktiv",
-  "tmpl_normal",
+function defaultTemplateForWeekday(day) {
+  // 0=Sun,1=Mon,...6=Sat
+  switch (day) {
+    case 0:
+      return "tmpl_leicht";
+    case 1:
+      return "tmpl_aktiv";
+    case 2:
+      return "tmpl_normal";
+    case 3:
+      return "tmpl_aktiv";
+    case 4:
+      return "tmpl_normal";
+    case 5:
+      return "tmpl_aktiv";
+    case 6:
+      return "tmpl_intensiv";
+    default:
+      return "tmpl_normal";
+  }
+}
 
-  // === May 2026 =============================================================
-  //  1 Fri (Tag der Arbeit – holiday → rest!) 2 Sat   3 Sun
-  "tmpl_ruhe",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  //  4 Mon           5 Tue            6 Wed            7 Thu
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  //  8 Fri           9 Sat           10 Sun           11 Mon
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  // 12 Tue          13 Wed           14 Thu           15 Fri
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  // 16 Sat          17 Sun           18 Mon           19 Tue
-  "tmpl_intensiv",
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  // 20 Wed          21 Thu           22 Fri           23 Sat
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  // 24 Sun          25 Mon           26 Tue           27 Wed
-  "tmpl_leicht",
-  "tmpl_aktiv",
-  "tmpl_normal",
-  "tmpl_aktiv",
-  // 28 Thu          29 Fri           30 Sat           31 Sun
-  "tmpl_normal",
-  "tmpl_aktiv",
-  "tmpl_intensiv",
-  "tmpl_leicht",
-];
+function generateTemplateIdPerDay(days = 90) {
+  const arr = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < days; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (days - 1 - i)); // fill from past → today
+
+    const base = defaultTemplateForWeekday(d.getDay());
+
+    // Small deterministic variation so some days look different but remain stable across reloads in one session
+    const variationSeed =
+      (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) % 7;
+    let pick = base;
+    if (variationSeed === 0) pick = "tmpl_ruhe"; // occasional rest day
+    if (variationSeed === 1 && base !== "tmpl_ruhe") pick = "tmpl_leicht";
+
+    arr.push(pick);
+  }
+
+  return arr;
+}
+
+export const templateIdPerDay = generateTemplateIdPerDay(90);

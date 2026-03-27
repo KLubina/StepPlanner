@@ -192,7 +192,7 @@ ${formatted}
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 const today = new Date();
-today.setHours(0, 0, 0, 0);
+today.setHours(0, 0, 0, 0); // bleibt, aber ist jetzt immer dynamisch
 
 const steps = generateStepsArray(today);
 const planned = generatePlannedArray(today);
